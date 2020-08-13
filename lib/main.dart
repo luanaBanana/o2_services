@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:o2_services/webview.dart';
 
 void main() => runApp((MyApp()));
 
@@ -10,7 +11,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,6 +24,7 @@ class _MyAppState extends State<MyApp> {
             //TODO: Add Widgets -> add new files if you add new widgets.
             Text('Hello World'),
             Text('Ich bin Text 2'),
+            WebView()
           ],
         ),
       ),
