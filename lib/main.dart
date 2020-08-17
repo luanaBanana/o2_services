@@ -27,25 +27,40 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('o2.services'),
-          backgroundColor: Color(0xFF47AFFF),
-        ),
-        body: Column(
-          children: [
-            //TODO: Add Widgets -> add new files if you add new widgets.
-            Text('Hello World'),
-            Text('Ich bin Text 2'),
-            WebView(
-              initialUrl: "https:www.google.com",
-            onWebViewCreated: (WebViewController
-    webViewController) {
-              _controller.complete(webViewController);
-            })
-          ],
-        ),
+      title: 'o2.services',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: MyHomePage(title: 'o2.services'),
     );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: WebView(
+          initialUrl: "https://www.google.com/",
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+        ));
   }
 }
