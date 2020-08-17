@@ -1,6 +1,6 @@
 # o2_services
 
-A new Flutter project.
+We are building a mobile application with Flutter.
 
 ## Getting Started
 
