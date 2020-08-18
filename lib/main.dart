@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:o2_services/firebase_messaging.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp((MyApp()));
@@ -15,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,35 +24,25 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'o2.services'),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text('o2.services'),
+          ),
+          body: Column(
+            children: [
+              //TODO: Add Widgets -> add new files if you add new widgets.
+              Text('Hello World'),
+              Text('Ich bin Text 2'),
+              Expanded(
+                child: WebView(
+                  initialUrl: "https://www.google.com/",
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _controller.complete(webViewController);
+                  },
+                ),
+              ),
+            ],
+          )),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: WebView(
-          initialUrl: "https://www.google.com/",
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-        ));
   }
 }
