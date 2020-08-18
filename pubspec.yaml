@@ -23,8 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   flutter_launcher_icons: ^0.7.5
+  firebase_messaging:
 
 
 

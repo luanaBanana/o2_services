@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "77999306404",
+    "firebase_url": "https://o2servicehslu.firebaseio.com",
+    "project_id": "o2servicehslu",
+    "storage_bucket": "o2servicehslu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77999306404:android:95b7db1a73956924bc5831",
+        "android_client_info": {
+          "package_name": "com.example.o2_services"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77999306404-iqs7ndvvua82khmfmmk10f1dc23ot8g8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDquXcIuLaYJjYfoVFwk4ABg1XglzBZRFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77999306404-iqs7ndvvua82khmfmmk10f1dc23ot8g8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
