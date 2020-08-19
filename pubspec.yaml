@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.7.5
   firebase_messaging:
+  google_fonts: ^1.1.0
 
 
 
