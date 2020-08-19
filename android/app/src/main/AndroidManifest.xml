@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="o2_services"
+        android:label="O2.services"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity

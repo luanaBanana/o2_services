@@ -19,14 +19,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'o2.services',
+      title: 'O2.services',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
           appBar: AppBar(
-            title: Text('o2.services'),
+            title: Text('O2.services'),
           ),
           body: Column(
             children: [
