@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/firstwidget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import './firstwidget.dart';
+
 import './firstcolumn.dart';
+import './firstwidget.dart';
 
 void main() => runApp((MyApp()));
 
 class MyApp extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
@@ -18,8 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  void buttonClicked(){
+  void buttonClicked() {
     var newurl = "https://www.wikipedia.org/";
     _webViewController.loadUrl(newurl);
   }
@@ -38,25 +37,29 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-          appBar: AppBar(
-            title: Text('O2.services'),
-          ),
-          body: Column(
-           children: <Widget>[
-              //TODO: Add Widgets -> add new files if you add new widgets.
-             FirstWidget(),
-             FirstColumn(),
-              RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
-              Expanded(
-                child: WebView(
-                  initialUrl: "https://www.google.com/",
-                  onWebViewCreated: (webViewController){
-                    _webViewController = webViewController;
-                  },
-                ),
+        appBar: AppBar(
+          title: Text('O2.services'),
+        ),
+        body: Column(
+          children: <Widget>[
+            //TODO: Add Widgets -> add new files if you add new widgets.
+            FirstWidget(),
+            FirstColumn(),
+            Expanded(
+              child: FirebaseMessagingWidget(buttonClicked),
+            ),
+            RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
+            Expanded(
+              child: WebView(
+                initialUrl: "https://www.google.com/",
+                onWebViewCreated: (webViewController) {
+                  _webViewController = webViewController;
+                },
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
