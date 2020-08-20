@@ -20,11 +20,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   void buttonClicked(){
-    print ('The Button was clicked');
+    var newurl = "https://www.wikipedia.org/";
+    _webViewController.loadUrl(newurl);
   }
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
+  WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +50,8 @@ class _MyAppState extends State<MyApp> {
               Expanded(
                 child: WebView(
                   initialUrl: "https://www.google.com/",
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _controller.complete(webViewController);
+                  onWebViewCreated: (webViewController){
+                    _webViewController = webViewController;
                   },
                 ),
               ),
