@@ -9,6 +9,7 @@ import './firstcolumn.dart';
 import './firstwidget.dart';
 
 void main() => runApp((MyApp()));
+var newURL = "https://www.wikipedia.org/";
 
 class MyApp extends StatefulWidget {
   @override
@@ -19,8 +20,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   void buttonClicked() {
-    var newurl = "https://www.wikipedia.org/";
-    _webViewController.loadUrl(newurl);
+    print('new URL: ' + newURL);
+    _webViewController.loadUrl(newURL);
   }
 
   final Completer<WebViewController> _controller =
@@ -48,7 +49,7 @@ class _MyAppState extends State<MyApp> {
             Expanded(
               child: FirebaseMessagingWidget(buttonClicked),
             ),
-            RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
+            //RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
             Expanded(
               child: WebView(
                 initialUrl: "https://www.google.com/",

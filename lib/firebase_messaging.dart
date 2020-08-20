@@ -32,22 +32,29 @@ class _FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
         setState(() {
           messages.add(Message(
               title: notification['title'], body: notification['body']));
-          selectHandler();
+              newURL = notification['body'];
+              selectHandler();
         });
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-
         final notification = message['data'];
         setState(() {
           messages.add(Message(
-            title: '${notification['title']}',
-            body: '${notification['body']}',
+            title: '${notification['url']}',
+            body: '${notification['url']}',
           ));
+          newURL = notification['url'];
+          selectHandler();
         });
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+        final notification = message['data'];
+        setState(() {
+          newURL = notification['url'];
+          selectHandler();
+        });
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
