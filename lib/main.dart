@@ -7,6 +7,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import './firstcolumn.dart';
 import './firstwidget.dart';
+import './bottomnavigationbar.dart';
+import './webviewpage.dart';
+import './urlpage.dart';
 
 void main() => runApp((MyApp()));
 var newURL = "https://www.wikipedia.org/";
@@ -24,8 +27,15 @@ class _MyAppState extends State<MyApp> {
     _webViewController.loadUrl(newURL);
   }
 
+  // BottomNavigationBar
+  int _selectedPage = 0;
+  final _pageOptions = [
+    WebViewPage(),
+    UrlPage(),
+  ];
+
   final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  Completer<WebViewController>();
 
   WebViewController _webViewController;
 
@@ -46,6 +56,8 @@ class _MyAppState extends State<MyApp> {
             //TODO: Add Widgets -> add new files if you add new widgets.
             FirstWidget(),
             FirstColumn(),
+         //  _pageOptions[_selectedPage],
+
             Expanded(
               child: FirebaseMessagingWidget(buttonClicked),
             ),
@@ -60,6 +72,20 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.grey[200],
+            currentIndex: _selectedPage,
+            onTap: (int index) {
+              setState(() {
+                _selectedPage = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home), title: Text('WebView')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.send), title: Text('Send URL')),
+            ]),
       ),
     );
   }
