@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:o2_services/firebase_messaging.dart';
-import 'package:o2_services/firstwidget.dart';
+import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import './firstcolumn.dart';
-import './firstwidget.dart';
+import 'firebase_messaging.dart';
 
 void main() => runApp((MyApp()));
-var newURL = "https://www.wikipedia.org/";
+var url = "https://www.google.com/";
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,17 +15,30 @@ class MyApp extends StatefulWidget {
     return _MyAppState();
   }
 }
+WebViewController _webViewController;
 
 class _MyAppState extends State<MyApp> {
+
   void buttonClicked() {
-    print('new URL: ' + newURL);
-    _webViewController.loadUrl(newURL);
+    setState(() {
+      print('new URL: ' + url);
+      _webViewController.loadUrl(url);
+    });
   }
 
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  // BottomNavigationBar
+  int _currentIndex = 0;
+  final List<Widget> _pageOptions = [
+    WebView(
+      initialUrl: url,
+      onWebViewCreated: (webViewController) {
+        _webViewController = webViewController;
+      },
+    ),
+    SendNotificationView(),
+    Text("Test View"),
+  ];
 
-  WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +53,38 @@ class _MyAppState extends State<MyApp> {
           title: Text('O2.services'),
         ),
         body: Column(
-          children: <Widget>[
-            //TODO: Add Widgets -> add new files if you add new widgets.
-            FirstWidget(),
-            FirstColumn(),
-            Expanded(
+          children: [
+            SizedBox(
+              height: 100.0,
               child: FirebaseMessagingWidget(buttonClicked),
             ),
-            //RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
-            Expanded(
-              child: WebView(
-                initialUrl: "https://www.google.com/",
-                onWebViewCreated: (webViewController) {
-                  _webViewController = webViewController;
-                },
-              ),
+            SizedBox(
+              height: 300.0,
+              child: _pageOptions[_currentIndex],
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.grey[200],
+            currentIndex: 0,
+            onTap: onTabTapped,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home), title: Text('WebView')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.send), title: Text('Send URL')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.send), title: Text('Test')),
+            ]),
       ),
     );
   }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+
 }

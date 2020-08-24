@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'message.dart';
+import 'model/message.dart';
 import 'main.dart';
 
 class FirebaseMessagingWidget extends StatefulWidget {
@@ -32,7 +32,7 @@ class _FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
         setState(() {
           messages.add(Message(
               title: notification['title'], body: notification['body']));
-              newURL = notification['body'];
+              url = notification['body'];
               selectHandler();
         });
       },
@@ -44,7 +44,7 @@ class _FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
             title: '${notification['url']}',
             body: '${notification['url']}',
           ));
-          newURL = notification['url'];
+          url = notification['url'];
           selectHandler();
         });
       },
@@ -52,7 +52,7 @@ class _FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
         print("onResume: $message");
         final notification = message['data'];
         setState(() {
-          newURL = notification['url'];
+          url = notification['url'];
           selectHandler();
         });
       },
