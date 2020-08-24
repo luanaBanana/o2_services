@@ -5,7 +5,7 @@ import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/firstwidget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-
+import './firstcolumn.dart';
 import './firstwidget.dart';
 import './bottomnavigationbar.dart';
 import './webviewpage.dart';
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   ];
 
   final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  Completer<WebViewController>();
 
   WebViewController _webViewController;
 
@@ -55,24 +55,25 @@ class _MyAppState extends State<MyApp> {
           children: <Widget>[
             //TODO: Add Widgets -> add new files if you add new widgets.
             FirstWidget(),
+            FirstColumn(),
+         //  _pageOptions[_selectedPage],
 
-            // Expanded(
-            //  child: FirebaseMessagingWidget(buttonClicked),
-            // ),
-            _pageOptions[_selectedPage],
+            Expanded(
+              child: FirebaseMessagingWidget(buttonClicked),
+            ),
             //RaisedButton(child: Text('Send URL'), onPressed: buttonClicked),
-            /* Expanded(
+            Expanded(
               child: WebView(
                 initialUrl: "https://www.google.com/",
                 onWebViewCreated: (webViewController) {
                   _webViewController = webViewController;
                 },
+              ),
             ),
-            ), */
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.grey[200],
+          backgroundColor: Colors.grey[200],
             currentIndex: _selectedPage,
             onTap: (int index) {
               setState(() {
