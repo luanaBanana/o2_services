@@ -64,41 +64,43 @@ class SendNotificationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: new EdgeInsets.fromLTRB(15, 0, 0, 0),
-        // Or set whatever you want
-        key: _formKey,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Enter your URL',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your text';
-                  } else if (!value.startsWith("https://")) {
-                    return 'Please start with https://';
-                  }
-                  return null;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: RaisedButton(
-                  onPressed: () {
-                    finalUrl = _teController.text;
-                    if (_formKey.currentState.validate()) {
-                      // Process data.
-                      sendAndRetrieveMessage();
-                    }
-                    _teController.clear();
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                  },
-                  child: Text('Send'),
-                ),
-              ),
-            ]));
+      margin: new EdgeInsets.fromLTRB(15, 0, 0, 0),
+      // Or set whatever you want
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: const InputDecoration(
+              hintText: 'Enter your URL',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter your text';
+              } else if (!value.startsWith("https://")) {
+                return 'Please start with https://';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: RaisedButton(
+              onPressed: () {
+                finalUrl = _teController.text;
+                if (_formKey.currentState.validate()) {
+                  // Process data.
+                  sendAndRetrieveMessage();
+                }
+                _teController.clear();
+                // Validate will return true if the form is valid, or false if
+                // the form is invalid.
+              },
+              child: Text('Send'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
