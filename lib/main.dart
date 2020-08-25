@@ -52,17 +52,18 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
+
         appBar: AppBar(
           title: Text('O2.services'),
         ),
         body: Column(
           children: [
-            SizedBox(
-              height: 100.0,
+            /*Flexible(
+              flex: 1,
               child: FirebaseMessagingWidget(buttonClicked),
-            ),
-            SizedBox(
-              height: 300.0,
+            ),*/
+            Flexible(
+              flex: 1,
               child: _pageOptions[_currentIndex],
             ),
           ],
