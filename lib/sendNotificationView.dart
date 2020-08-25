@@ -14,6 +14,9 @@ class SendNotificationView extends StatelessWidget {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  TextEditingController _teController = new TextEditingController();
+  String finalUrl;
+
 
   //TODO: add message body as class.
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
@@ -32,7 +35,7 @@ class SendNotificationView extends StatelessWidget {
         <String, dynamic>{
           'notification': <String, dynamic>{
             'body': 'I can send notifications to other devices!!!!',
-            'title': 'I send this from my emulator app YAAAHAS'
+            'title': finalUrl
           },
           'priority': 'high',
           'data': <String, dynamic>{
@@ -76,11 +79,16 @@ class SendNotificationView extends StatelessWidget {
                   }
                   return null;
                 },
+                controller: _teController,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: RaisedButton(
                   onPressed: () {
+                    finalUrl = _teController.text;
+                    if(!finalUrl.startsWith("https://")){
+                      finalUrl = "https://"+finalUrl;
+                    }
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
                     if (_formKey.currentState.validate()) {
