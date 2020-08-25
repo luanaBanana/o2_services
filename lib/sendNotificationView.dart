@@ -34,7 +34,7 @@ class SendNotificationView extends StatelessWidget {
       body: jsonEncode(
         <String, dynamic>{
           'notification': <String, dynamic>{
-            'body': 'I can send notifications to other devices!!!!',
+            'body': finalUrl,
             'title': finalUrl
           },
           'priority': 'high',
