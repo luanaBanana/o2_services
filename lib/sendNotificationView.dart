@@ -77,24 +77,42 @@ class SendNotificationView extends StatelessWidget {
                   if (value.isEmpty) {
                     return 'Please enter your text';
                   }
+                  else if (!value.startsWith("https://")){
+                    return 'Please start with https://';
+                  }
                   return null;
+
+
                 },
+
                 controller: _teController,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: RaisedButton(
                   onPressed: () {
+
                     finalUrl = _teController.text;
+
+                        if (_formKey.currentState.validate()) {
+                          // Process data.
+                          sendAndRetrieveMessage();
+                        }
+
+                        _teController.clear();
+
+
+
+
+
+                    /*
                     if(!finalUrl.startsWith("https://")){
                       finalUrl = "https://"+finalUrl;
                     }
+                    */
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
-                    if (_formKey.currentState.validate()) {
-                      // Process data.
-                      sendAndRetrieveMessage();
-                    }
+
                   },
                   child: Text('Send'),
                 ),
