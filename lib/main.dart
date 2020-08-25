@@ -67,10 +67,16 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
+
+
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.grey[200],
-            currentIndex: 0,
-            onTap: onTabTapped,
+            currentIndex: _currentIndex,
+            onTap: (int index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
             items: [
               BottomNavigationBarItem(
                   icon: Icon(Icons.home), title: Text('WebView')),
