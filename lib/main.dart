@@ -58,10 +58,10 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            /*Flexible(
+            Flexible(
               flex: 1,
               child: FirebaseMessagingWidget(buttonClicked),
-            ),*/
+            ),
             Flexible(
               flex: 1,
               child: _pageOptions[_currentIndex],

@@ -85,7 +85,6 @@ class SendNotificationView extends StatelessWidget {
 
                 },
 
-                controller: _teController,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
