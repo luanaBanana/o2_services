@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:o2_services/sendNotificationView.dart';
-import 'package:o2_services/firebase_messaging.dart';
-
 
 import 'firebase_messaging.dart';
 
@@ -21,7 +17,6 @@ class MyApp extends StatefulWidget {
 WebViewController _webViewController;
 
 class _MyAppState extends State<MyApp> {
-
   void buttonClicked() {
     setState(() {
       print('new URL: ' + url);
@@ -42,7 +37,6 @@ class _MyAppState extends State<MyApp> {
     Text("Test View"),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,24 +46,20 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-
         appBar: AppBar(
           title: Text('O2.services'),
         ),
         body: Column(
           children: [
-            Flexible(
-              flex: 1,
+            Expanded(
               child: FirebaseMessagingWidget(buttonClicked),
             ),
-            Flexible(
-              flex: 1,
+            Expanded(
+              flex: 15,
               child: _pageOptions[_currentIndex],
             ),
           ],
         ),
-
-
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.grey[200],
             currentIndex: _currentIndex,
@@ -95,6 +85,4 @@ class _MyAppState extends State<MyApp> {
       _currentIndex = index;
     });
   }
-
-
 }
