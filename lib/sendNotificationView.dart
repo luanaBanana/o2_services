@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:o2_services/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
-final String serverToken =
-    'AAAAEike9qQ:APA91bG9AvlSWWaMIZy-jybRs--uMgc7Ybjz7_wavGloY3ArfrZ1eDMcj-FDt2hRUrInmIo4_872rqjHouOi7vr-IgYSqxqZH04uXJqdWJBehY_O_SwKBUiI078xkYFN2aFraaYEu3o4';
+final String serverToken = 'AAAAEike9qQ:APA91bG9AvlSWWaMIZy-jybRs--uMgc7Ybjz7_wavGloY3ArfrZ1eDMcj-FDt2hRUrInmIo4_872rqjHouOi7vr-IgYSqxqZH04uXJqdWJBehY_O_SwKBUiI078xkYFN2aFraaYEu3o4';
+
 
 class SendNotificationView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -16,12 +17,12 @@ class SendNotificationView extends StatelessWidget {
   TextEditingController _teController = new TextEditingController();
   String finalUrl;
 
+
   //TODO: add message body as class.
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
     print('We here');
     await _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: false),
+      const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
     );
 
     await http.post(
@@ -39,18 +40,17 @@ class SendNotificationView extends StatelessWidget {
           'priority': 'high',
           'data': <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'url': finalUrl,
             'id': '1',
             'status': 'done'
           },
           //'to': await _firebaseMessaging.getToken(),
-          "to": "/topics/all",
+          "to":"/topics/all",
         },
       ),
     );
 
     final Completer<Map<String, dynamic>> completer =
-        Completer<Map<String, dynamic>>();
+    Completer<Map<String, dynamic>>();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -61,11 +61,10 @@ class SendNotificationView extends StatelessWidget {
     return completer.future;
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: new EdgeInsets.fromLTRB(15, 0, 0, 0),
-        // Or set whatever you want
+    return Form(
         key: _formKey,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,28 +76,40 @@ class SendNotificationView extends StatelessWidget {
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter your text';
-                  } else if (!value.startsWith("https://")) {
+                  }
+                  else if (!value.startsWith("https://")){
                     return 'Please start with https://';
                   }
                   return null;
+
+
                 },
+
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: RaisedButton(
                   onPressed: () {
+
                     finalUrl = _teController.text;
-                    if (_formKey.currentState.validate()) {
-                      // Process data.
-                      sendAndRetrieveMessage();
-                    }
-                    _teController.clear();
+
+                        if (_formKey.currentState.validate()) {
+                          // Process data.
+                          sendAndRetrieveMessage();
+                        }
+
+                        _teController.clear();
+
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
+
                   },
                   child: Text('Send'),
                 ),
               ),
-            ]));
+            ]
+        )
+    );
   }
 }
+

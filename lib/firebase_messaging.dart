@@ -21,22 +21,6 @@ class FirebaseMessagingWidget extends StatefulWidget {
 
 }
 
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-  if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-    url = data['url'];
-  }
-
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-    url = notification['url'];
-  }
-
-  // Or do other work.
-}
-
 class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
   final Function selectHandler;
   FirebaseMessagingWidgetState(this.selectHandler);
@@ -61,7 +45,6 @@ class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
               selectHandler();
         });
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         final notification = message['data'];
@@ -72,6 +55,10 @@ class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
           ));
           url = notification['url'];
           selectHandler();
+
+
+
+
         });
       },
       onResume: (Map<String, dynamic> message) async {
@@ -89,5 +76,14 @@ class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
 
   @override
   Widget build(BuildContext context) =>
-       Text('Current Url: $url');
+      ListView(
+        children:
+        messages.map(buildMessage).toList(),
+      );
+
+  Widget buildMessage(Message message)=>
+      ListTile(
+        title: Text(message.title),
+        subtitle: Text(message.body),
+      );
 }
