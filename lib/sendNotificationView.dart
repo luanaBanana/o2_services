@@ -100,15 +100,6 @@ class SendNotificationView extends StatelessWidget {
 
                         _teController.clear();
 
-
-
-
-
-                    /*
-                    if(!finalUrl.startsWith("https://")){
-                      finalUrl = "https://"+finalUrl;
-                    }
-                    */
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
 
