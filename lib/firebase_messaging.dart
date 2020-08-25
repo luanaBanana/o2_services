@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'model/message.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
+
 
 
 class FirebaseMessagingWidget extends StatefulWidget {
@@ -15,6 +17,8 @@ class FirebaseMessagingWidget extends StatefulWidget {
   @override
   FirebaseMessagingWidgetState createState() =>
       FirebaseMessagingWidgetState(selectHandler);
+
+
 }
 
 class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
@@ -23,6 +27,8 @@ class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final List<Message> messages = [];
+
+
 
   @override
   void initState() {
@@ -49,6 +55,10 @@ class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
           ));
           url = notification['url'];
           selectHandler();
+
+
+
+
         });
       },
       onResume: (Map<String, dynamic> message) async {
