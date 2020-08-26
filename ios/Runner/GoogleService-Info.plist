@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:77999306404:ios:cd5a89a23192127bbc5831</string>
+	<string>1:77999306404:ios:f8432d81f73a6df5bc5831</string>
 	<key>DATABASE_URL</key>
 	<string>https://o2servicehslu.firebaseio.com</string>
 </dict>
