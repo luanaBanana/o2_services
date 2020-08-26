@@ -1,89 +1,34 @@
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'model/message.dart';
+
 import 'main.dart';
-import 'package:http/http.dart' as http;
-import 'package:webview_flutter/webview_flutter.dart';
-
-
+import 'model/message.dart';
 
 class FirebaseMessagingWidget extends StatefulWidget {
-  final Function selectHandler;
-  FirebaseMessagingWidget(this.selectHandler);
+  final List<Message> messages;
+
+  FirebaseMessagingWidget(this.messages);
 
   @override
   FirebaseMessagingWidgetState createState() =>
-      FirebaseMessagingWidgetState(selectHandler);
-
-
+      FirebaseMessagingWidgetState(messages);
 }
 
 class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
-  final Function selectHandler;
-  FirebaseMessagingWidgetState(this.selectHandler);
+  final List<Message> messages;
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final List<Message> messages = [];
-
-
+  FirebaseMessagingWidgetState(this.messages);
 
   @override
-  void initState() {
-    super.initState();
-    _firebaseMessaging.subscribeToTopic("all");
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        final notification = message['notification'];
-        setState(() {
-          messages.add(Message(
-              title: notification['title'], body: notification['body']));
-              url = notification['body'];
-              selectHandler();
-        });
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        final notification = message['data'];
-        setState(() {
-          messages.add(Message(
-            title: '${notification['url']}',
-            body: '${notification['url']}',
-          ));
-          url = notification['url'];
-          selectHandler();
-
-
-
-
-        });
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        final notification = message['data'];
-        setState(() {
-          url = notification['url'];
-          selectHandler();
-        });
-      },
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        margin: new EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: Text('Current URL: $url',
+            style: TextStyle(fontSize: 16,),
+            textAlign: TextAlign.center
+        ),
     );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
+
+
   }
-
-  @override
-  Widget build(BuildContext context) =>
-      ListView(
-        children:
-        messages.map(buildMessage).toList(),
-      );
-
-  Widget buildMessage(Message message)=>
-      ListTile(
-        title: Text(message.title),
-        subtitle: Text(message.body),
-      );
 }

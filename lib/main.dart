@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -8,9 +9,31 @@ import 'package:o2_services/firebase_messaging.dart';
 
 
 import 'firebase_messaging.dart';
+import 'model/message.dart';
 
 void main() => runApp((MyApp()));
-var url = "https://www.google.com/";
+var url = "https://o2.services/";
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+WebViewController _webViewController;
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+    print('We here 1');
+
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print('We here 2');
+
+  }
+
+
+  // Or do other work.
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -18,15 +41,19 @@ class MyApp extends StatefulWidget {
     return _MyAppState();
   }
 }
-WebViewController _webViewController;
 
 class _MyAppState extends State<MyApp> {
 
-  void buttonClicked() {
+  final List<Message> messages = [];
+
+
+
+  void changeURL(String url) {
+    print('new URL: ' + url);
     setState(() {
-      print('new URL: ' + url);
       _webViewController.loadUrl(url);
     });
+    Scaffold.of(context).reassemble();
   }
 
   // BottomNavigationBar
@@ -34,13 +61,59 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pageOptions = [
     WebView(
       initialUrl: url,
+      javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (webViewController) {
         _webViewController = webViewController;
       },
+
     ),
-    SendNotificationView(),
+    SendNotificationView(_firebaseMessaging),
     Text("Test View"),
   ];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.subscribeToTopic("all");
+
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+          final notification = message['notification'];
+          setState(() {
+            url = notification['body'];
+            print('LOG: url on message: $url');
+            changeURL(url);
+          });
+        },
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+          final notification = message['data'];
+          setState(() {
+            messages.add(Message(
+              title: '${notification['url']}',
+              body: '${notification['url']}',
+            ));
+            url = notification['url'];
+            changeURL(url);
+          });
+        },
+        onBackgroundMessage: myBackgroundMessageHandler,
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+          final notification = message['data'];
+          setState(() {
+            url = notification['url'];
+            changeURL(url);
+          });
+        },
+      );
+
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+  }
 
 
   @override
@@ -58,12 +131,11 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Flexible(
-              flex: 1,
-              child: FirebaseMessagingWidget(buttonClicked),
+            Expanded(
+              child: FirebaseMessagingWidget(messages),
             ),
-            Flexible(
-              flex: 1,
+            Expanded(
+              flex: 10,
               child: _pageOptions[_currentIndex],
             ),
           ],
@@ -73,11 +145,7 @@ class _MyAppState extends State<MyApp> {
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.grey[200],
             currentIndex: _currentIndex,
-            onTap: (int index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
+            onTap: onTabTapped,
             items: [
               BottomNavigationBarItem(
                   icon: Icon(Icons.home), title: Text('WebView')),
@@ -88,13 +156,15 @@ class _MyAppState extends State<MyApp> {
             ]),
       ),
     );
+
+
   }
 
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
+      _webViewController.loadUrl(url);
     });
   }
-
 
 }
