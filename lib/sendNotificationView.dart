@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +34,8 @@ class SendNotificationView extends StatelessWidget {
         <String, dynamic>{
           'notification': <String, dynamic>{
             'body': finalUrl,
-            'title': finalUrl
+            'title': finalUrl,
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
           },
           'priority': 'high',
           'data': <String, dynamic>{
@@ -44,7 +44,6 @@ class SendNotificationView extends StatelessWidget {
             'status': 'done',
             'url': finalUrl
           },
-          //'to': await _firebaseMessaging.getToken(),
           "to": "/topics/all",
         },
       ),

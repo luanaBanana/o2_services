@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:o2_services/sendNotificationView.dart';
 import 'package:o2_services/firebase_messaging.dart';
 
 
@@ -56,22 +56,6 @@ class _MyAppState extends State<MyApp> {
     Scaffold.of(context).reassemble();
   }
 
-  // BottomNavigationBar
-  int _currentIndex = 0;
-  final List<Widget> _pageOptions = [
-    WebView(
-      initialUrl: url,
-      javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (webViewController) {
-        _webViewController = webViewController;
-      },
-
-    ),
-    SendNotificationView(_firebaseMessaging),
-    Text("Test View"),
-  ];
-
-
   @override
   void initState() {
     super.initState();
@@ -91,6 +75,7 @@ class _MyAppState extends State<MyApp> {
           print("onLaunch: $message");
           final notification = message['data'];
           setState(() {
+            print("onLaunch 2: $message");
             messages.add(Message(
               title: '${notification['url']}',
               body: '${notification['url']}',
@@ -99,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             changeURL(url);
           });
         },
-        onBackgroundMessage: myBackgroundMessageHandler,
+        onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
         onResume: (Map<String, dynamic> message) async {
           print("onResume: $message");
           final notification = message['data'];
@@ -160,6 +145,20 @@ class _MyAppState extends State<MyApp> {
 
   }
 
+  // BottomNavigationBar
+  int _currentIndex = 0;
+  final List<Widget> _pageOptions = [
+    WebView(
+      initialUrl: url,
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (webViewController) {
+        _webViewController = webViewController;
+      },
+
+    ),
+    SendNotificationView(_firebaseMessaging),
+    Text("Test View"),
+  ];
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
