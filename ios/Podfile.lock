@@ -1,6 +1,6 @@
 PODS:
-  - Firebase (6.26.0):
-    - Firebase/Core (= 6.26.0)
+  - Firebase/Analytics (6.26.0):
+    - Firebase/Core
   - Firebase/Core (6.26.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.6.0)
@@ -98,11 +98,9 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - Firebase
-  - Firebase/Core
+  - Firebase/Analytics
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - FirebaseMessaging
   - Flutter (from `Flutter`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -159,6 +157,6 @@ SPEC CHECKSUMS:
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: 0c1235fc1bd8a711e7977fb006b5d3308b6396c5
+PODFILE CHECKSUM: ce04890ae963bc08944d56cf46c87f64f6a6ceb4
 
 COCOAPODS: 1.9.3
