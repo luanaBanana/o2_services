@@ -16,6 +16,10 @@ var url = "https://o2.services/";
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 WebViewController _webViewController;
 
+bool showLoading = false;
+
+
+
 Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
   if (message.containsKey('data')) {
     // Handle data message
@@ -36,9 +40,12 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
 }
 
 class MyApp extends StatefulWidget {
+
+
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
+
   }
 }
 
@@ -46,6 +53,11 @@ class _MyAppState extends State<MyApp> {
 
   final List<Message> messages = [];
 
+  void updateLoading(bool ls) {
+    this.setState((){
+      showLoading = ls;
+    });
+  }
 
 
   void changeURL(String url) {
@@ -53,6 +65,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _webViewController.loadUrl(url);
     });
+
     Scaffold.of(context).reassemble();
   }
 
@@ -68,6 +81,7 @@ class _MyAppState extends State<MyApp> {
           setState(() {
             url = notification['body'];
             print('LOG: url on message: $url');
+            updateLoading(true);
             changeURL(url);
           });
         },
@@ -81,6 +95,7 @@ class _MyAppState extends State<MyApp> {
               body: '${notification['url']}',
             ));
             url = notification['url'];
+            updateLoading(true);
             changeURL(url);
           });
         },
@@ -90,6 +105,7 @@ class _MyAppState extends State<MyApp> {
           final notification = message['data'];
           setState(() {
             url = notification['url'];
+            updateLoading(true);
             changeURL(url);
           });
         },
@@ -139,7 +155,9 @@ class _MyAppState extends State<MyApp> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.send), title: Text('Test')),
             ]),
+
       ),
+
     );
 
 
@@ -150,12 +168,15 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pageOptions = [
     WebView(
       initialUrl: url,
+      onPageFinished: (data){
+        updateLoading(false);
+      },
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (webViewController) {
         _webViewController = webViewController;
-      },
-
+        },
     ),
+    (showLoading)?Center(child: CircularProgressIndicator(),):Center(),
     SendNotificationView(_firebaseMessaging),
     Text("Test View"),
   ];
