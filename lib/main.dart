@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:o2_services/sendNotificationView.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:o2_services/firebase_messaging.dart';
-
+import 'package:o2_services/sendNotificationView.dart';
+import 'package:o2_services/webview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'firebase_messaging.dart';
 import 'model/message.dart';
@@ -14,58 +14,46 @@ import 'model/message.dart';
 void main() => runApp((MyApp()));
 var url = "https://o2.services/";
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-WebViewController _webViewController;
-
+WebViewController webViewController;
 bool showLoading = false;
-
-
 
 Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
   if (message.containsKey('data')) {
     // Handle data message
     final dynamic data = message['data'];
     print('We here 1');
-
   }
 
   if (message.containsKey('notification')) {
     // Handle notification message
     final dynamic notification = message['notification'];
     print('We here 2');
-
   }
-
 
   // Or do other work.
 }
 
 class MyApp extends StatefulWidget {
-
-
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
-
   }
 }
 
 class _MyAppState extends State<MyApp> {
-
   final List<Message> messages = [];
 
   void updateLoading(bool ls) {
-    this.setState((){
+    this.setState(() {
       showLoading = ls;
     });
   }
 
-
-  void changeURL(String url) {
+  changeURL(String url) {
     print('new URL: ' + url);
     setState(() {
-      _webViewController.loadUrl(url);
+      webViewController.loadUrl(url);
     });
-
     Scaffold.of(context).reassemble();
   }
 
@@ -74,48 +62,46 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _firebaseMessaging.subscribeToTopic("all");
 
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          final notification = message['notification'];
-          setState(() {
-            url = notification['body'];
-            print('LOG: url on message: $url');
-            updateLoading(true);
-            changeURL(url);
-          });
-        },
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-          final notification = message['data'];
-          setState(() {
-            print("onLaunch 2: $message");
-            messages.add(Message(
-              title: '${notification['url']}',
-              body: '${notification['url']}',
-            ));
-            url = notification['url'];
-            updateLoading(true);
-            changeURL(url);
-          });
-        },
-        onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-          final notification = message['data'];
-          setState(() {
-            url = notification['url'];
-            updateLoading(true);
-            changeURL(url);
-          });
-        },
-      );
-
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        final notification = message['notification'];
+        setState(() {
+          url = notification['body'];
+          print('LOG: url on message: $url');
+          updateLoading(true);
+          changeURL(url);
+        });
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        final notification = message['data'];
+        setState(() {
+          print("onLaunch 2: $message");
+          messages.add(Message(
+            title: '${notification['url']}',
+            body: '${notification['url']}',
+          ));
+          url = notification['url'];
+          updateLoading(true);
+          changeURL(url);
+        });
+      },
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        final notification = message['data'];
+        setState(() {
+          url = notification['url'];
+          updateLoading(true);
+          changeURL(url);
+        });
+      },
+    );
 
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -126,12 +112,18 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-
         appBar: AppBar(
           title: Text('O2.services'),
         ),
         body: Column(
           children: [
+            (showLoading)
+                ? Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ))
+                : Center(),
             Expanded(
               child: FirebaseMessagingWidget(messages),
             ),
@@ -141,8 +133,6 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-
-
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.grey[200],
             currentIndex: _currentIndex,
@@ -155,36 +145,23 @@ class _MyAppState extends State<MyApp> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.send), title: Text('Test')),
             ]),
-
       ),
-
     );
-
-
   }
 
   // BottomNavigationBar
   int _currentIndex = 0;
   final List<Widget> _pageOptions = [
-    WebView(
-      initialUrl: url,
-      onPageFinished: (data){
-        updateLoading(false);
-      },
-      javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (webViewController) {
-        _webViewController = webViewController;
-        },
-    ),
-    (showLoading)?Center(child: CircularProgressIndicator(),):Center(),
+    WebviewPage(url: url),
+    //(showLoading) ? Center(child: CircularProgressIndicator(),) : Center(),
     SendNotificationView(_firebaseMessaging),
     Text("Test View"),
   ];
+
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-      _webViewController.loadUrl(url);
+      //webViewController.loadUrl(url);
     });
   }
-
 }
