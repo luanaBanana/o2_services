@@ -53,11 +53,8 @@ class _MyAppState extends State<MyApp> {
 
   final List<Message> messages = [];
 
-  void updateLoading(bool ls) {
-    this.setState((){
-      showLoading = ls;
-    });
-  }
+
+
 
 
   void changeURL(String url) {
@@ -81,7 +78,6 @@ class _MyAppState extends State<MyApp> {
           setState(() {
             url = notification['body'];
             print('LOG: url on message: $url');
-            updateLoading(true);
             changeURL(url);
           });
         },
@@ -95,7 +91,6 @@ class _MyAppState extends State<MyApp> {
               body: '${notification['url']}',
             ));
             url = notification['url'];
-            updateLoading(true);
             changeURL(url);
           });
         },
@@ -105,7 +100,6 @@ class _MyAppState extends State<MyApp> {
           final notification = message['data'];
           setState(() {
             url = notification['url'];
-            updateLoading(true);
             changeURL(url);
           });
         },
@@ -169,14 +163,13 @@ class _MyAppState extends State<MyApp> {
     WebView(
       initialUrl: url,
       onPageFinished: (data){
-        updateLoading(false);
+
       },
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (webViewController) {
         _webViewController = webViewController;
         },
     ),
-    (showLoading)?Center(child: CircularProgressIndicator(),):Center(),
     SendNotificationView(_firebaseMessaging),
     Text("Test View"),
   ];
