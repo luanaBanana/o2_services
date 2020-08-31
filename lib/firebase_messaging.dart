@@ -4,7 +4,7 @@ import 'main.dart';
 import 'model/message.dart';
 
 class FirebaseMessagingWidget extends StatefulWidget {
-  final List<Message> messages;
+  final List<MyMessage> messages;
 
   FirebaseMessagingWidget(this.messages);
 
@@ -14,7 +14,7 @@ class FirebaseMessagingWidget extends StatefulWidget {
 }
 
 class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
-  final List<Message> messages;
+  final List<MyMessage> messages;
 
   FirebaseMessagingWidgetState(this.messages);
 

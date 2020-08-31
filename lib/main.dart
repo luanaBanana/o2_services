@@ -7,13 +7,16 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:o2_services/firebase_messaging.dart';
 import 'firebase_messaging.dart';
 import 'model/message.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 WebViewController _webViewController;
 var url = "https://google.com/";
 bool showLoading = false;
 
 
+void main() => runApp((MyApp()));
 
 
 class MyApp extends StatefulWidget {
@@ -26,10 +29,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  final List<Message> messages = [];
+  final List<MyMessage> messages = [];
 
   void changeURL(String url) {
-    print('new URL: ' + url);
+    print('new URL: ' + url); 
     setState(() {
       _webViewController.loadUrl(url);
     });
@@ -39,7 +42,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _firebaseMessaging.subscribeToTopic("all");
-
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print("onMessage: $message");
@@ -55,7 +64,7 @@ class _MyAppState extends State<MyApp> {
           final notification = message['data'];
           setState(() {
             print("onLaunch 2: $message");
-            messages.add(Message(
+            messages.add(MyMessage(
               title: '${notification['url']}',
               body: '${notification['url']}',
             ));
@@ -165,6 +174,18 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
 
 
   // Or do other work.
+}
+
+Future onSelectNotification(String payload) async {
+  showDialog(
+    context: MyApp.navKey.currentState.overlay.context,
+    builder: (_) {
+      return new AlertDialog(
+        title: Text("PayLoad"),
+        content: Text("Payload : $payload"),
+      );
+    },
+  );
 }
 
 Future<void> showMyDialog(BuildContext context) async {
