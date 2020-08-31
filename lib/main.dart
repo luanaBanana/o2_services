@@ -1,51 +1,26 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:o2_services/firebase_messaging.dart';
-
-
 import 'firebase_messaging.dart';
 import 'model/message.dart';
 
-void main() => runApp((MyApp()));
-var url = "https://o2.services/";
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 WebViewController _webViewController;
-
+var url = "https://google.com/";
 bool showLoading = false;
 
 
 
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-  if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-    print('We here 1');
-
-  }
-
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-    print('We here 2');
-
-  }
-
-
-  // Or do other work.
-}
 
 class MyApp extends StatefulWidget {
-
-
+  static final navKey = new GlobalKey<NavigatorState>();
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
-
   }
 }
 
@@ -53,17 +28,11 @@ class _MyAppState extends State<MyApp> {
 
   final List<Message> messages = [];
 
-
-
-
-
   void changeURL(String url) {
     print('new URL: ' + url);
     setState(() {
       _webViewController.loadUrl(url);
     });
-
-    Scaffold.of(context).reassemble();
   }
 
   @override
@@ -114,6 +83,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey:MyApp.navKey,
       title: 'O2.services',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -145,9 +115,7 @@ class _MyAppState extends State<MyApp> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.home), title: Text('WebView')),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.send), title: Text('Send URL')),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.send), title: Text('Test')),
+                  icon: Icon(Icons.send), title: Text('Send URL'))
             ]),
 
       ),
@@ -162,22 +130,67 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pageOptions = [
     WebView(
       initialUrl: url,
-      onPageFinished: (data){
-
-      },
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (webViewController) {
         _webViewController = webViewController;
-        },
-    ),
+      }
+      ),
     SendNotificationView(_firebaseMessaging),
-    Text("Test View"),
   ];
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-      _webViewController.loadUrl(url);
+      changeURL(url);
     });
   }
 
+}
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+    print('We here 1');
+
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print('We here 2');
+
+  }
+
+
+
+
+  // Or do other work.
+}
+
+Future<void> showMyDialog(BuildContext context) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('AlertDialog Title'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('This is a demo alert dialog.'),
+              Text('Would you like to approve of this message?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Approve'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
