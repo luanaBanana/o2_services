@@ -54,7 +54,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/go2sky.png"
+  image_path: "assets/images/go2sky_android.png"
 
   # To add assets to your application, add an assets section, like this:
   # assets:
