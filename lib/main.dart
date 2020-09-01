@@ -171,9 +171,15 @@ Future<void> showMyDialog() async {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('Yes'),
+            child: Text('Allow'),
             onPressed: () {
               _webViewController.loadUrl(url);
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Deny'),
+            onPressed: () {
               Navigator.of(context).pop();
             },
           ),
