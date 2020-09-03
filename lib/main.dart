@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -12,11 +11,11 @@ import 'firebase_messaging.dart';
 import 'model/message.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    new FlutterLocalNotificationsPlugin();
+GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 WebViewController _webViewController;
 var url = "https://google.com/";
 bool showLoading = false;
+bool isSender = false;
 
 void main() => runApp((MyApp()));
 
@@ -50,7 +49,11 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           url = notification['body'];
           print('LOG: url on message: $url');
-          showMyDialog();
+          if (isSender != true) {
+            showMyDialog();
+          } else {
+            isSender = false;
+          }
         });
       },
       onLaunch: (Map<String, dynamic> message) async {
@@ -77,7 +80,6 @@ class _MyAppState extends State<MyApp> {
         const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,11 +100,15 @@ class _MyAppState extends State<MyApp> {
             ),
             Expanded(
               flex: 10,
-              child: _pageOptions[_currentIndex],
+              child: IndexedStack(
+                index: _currentIndex,
+                children: _pageOptions,
+              ),
             ),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
+            key: navBarGlobalKey,
             backgroundColor: Colors.grey[200],
             currentIndex: _currentIndex,
             onTap: onTabTapped,
@@ -120,19 +126,19 @@ class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   final List<Widget> _pageOptions = [
     WebView(
-        initialUrl: url,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (webViewController) {
-          _webViewController = webViewController;
-        },
-        ),
+      initialUrl: url,
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (webViewController) {
+        _webViewController = webViewController;
+      },
+    ),
     SendNotificationView(_firebaseMessaging),
   ];
 
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-      changeURL(url);
+      _webViewController.loadUrl(url);
     });
   }
 }
@@ -142,17 +148,14 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     // Handle data message
     final dynamic data = message['data'];
     print('We here 1');
-
   }
 
   if (message.containsKey('notification')) {
     // Handle notification message
     final dynamic notification = message['notification'];
     print('We here 2');
-
   } // Or do other work.
 }
-
 
 Future<void> showMyDialog() async {
   return showDialog<void>(
@@ -173,6 +176,8 @@ Future<void> showMyDialog() async {
           FlatButton(
             child: Text('Allow'),
             onPressed: () {
+              final BottomNavigationBar navigationBar = navBarGlobalKey.currentWidget;
+              navigationBar.onTap(0);
               _webViewController.loadUrl(url);
               Navigator.of(context).pop();
               //onTabTapped(Icons.home);
