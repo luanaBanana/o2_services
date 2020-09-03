@@ -160,7 +160,7 @@ Future<void> showMyDialog() async {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('AlertDialog Title'),
+        title: Text('You received a new URL :)'),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[

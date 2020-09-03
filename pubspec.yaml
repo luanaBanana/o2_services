@@ -27,6 +27,8 @@ dependencies:
   firebase_messaging:
   google_fonts: ^1.1.0
   flutter_local_notifications: ^1.4.4+4
+  string_validator: ^0.1.4
+
 
 
 
