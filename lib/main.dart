@@ -11,6 +11,7 @@ import 'firebase_messaging.dart';
 import 'model/message.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 WebViewController _webViewController;
 var url = "https://google.com/";
 bool showLoading = false;
@@ -107,6 +108,7 @@ class _MyAppState extends State<MyApp> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
+            key: navBarGlobalKey,
             backgroundColor: Colors.grey[200],
             currentIndex: _currentIndex,
             onTap: onTabTapped,
@@ -174,6 +176,8 @@ Future<void> showMyDialog() async {
           FlatButton(
             child: Text('Allow'),
             onPressed: () {
+              final BottomNavigationBar navigationBar = navBarGlobalKey.currentWidget;
+              navigationBar.onTap(0);
               _webViewController.loadUrl(url);
               Navigator.of(context).pop();
               //onTabTapped(Icons.home);
