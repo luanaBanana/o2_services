@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           url = notification['body'];
           print('LOG: url on message: $url');
-          changeURL(url);
+          showMyDialog();
         });
       },
       onLaunch: (Map<String, dynamic> message) async {
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         final notification = message['data'];
         setState(() {
           url = notification['url'];
-          changeURL(url);
+          showMyDialog();
         });
       },
     );
@@ -175,6 +175,7 @@ Future<void> showMyDialog() async {
             onPressed: () {
               _webViewController.loadUrl(url);
               Navigator.of(context).pop();
+              //onTabTapped(Icons.home);
             },
           ),
           FlatButton(
