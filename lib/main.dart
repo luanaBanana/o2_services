@@ -16,7 +16,8 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     new FlutterLocalNotificationsPlugin();
 WebViewController _webViewController;
 var url = "https://google.com/";
-bool showLoading = false;
+var test = "test";
+
 
 void main() => runApp((MyApp()));
 
@@ -30,6 +31,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  //ProcessIndicator
+  num position = 1 ;
+
+  final key = UniqueKey();
+
+  doneLoading(String A) {
+    setState(() {
+      position = 0;
+    });
+  }
+
+  startLoading(String A){
+    setState(() {
+      position = 1;
+    });
+  }
+  //
+
   final List<MyMessage> messages = [];
 
   void changeURL(String url) {
@@ -120,11 +140,12 @@ class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   final List<Widget> _pageOptions = [
     WebView(
-        initialUrl: url,
+       initialUrl: url
+       /*,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (webViewController) {
           _webViewController = webViewController;
-        },
+        }, */
         ),
     SendNotificationView(_firebaseMessaging),
   ];
