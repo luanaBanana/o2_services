@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:string_validator/string_validator.dart' as val;
 
 
 final String serverToken =
