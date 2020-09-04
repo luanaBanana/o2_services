@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:o2_services/main.dart';
+
 
 final String serverToken =
     'AAAAEike9qQ:APA91bG9AvlSWWaMIZy-jybRs--uMgc7Ybjz7_wavGloY3ArfrZ1eDMcj-FDt2hRUrInmIo4_872rqjHouOi7vr-IgYSqxqZH04uXJqdWJBehY_O_SwKBUiI078xkYFN2aFraaYEu3o4';
@@ -18,7 +20,8 @@ class SendNotificationView extends StatelessWidget {
 
   //TODO: add message body as class.
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
-    print('We here');
+    isSender = true;
+    print('LOG: You are about to send a message');
     await _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(
           sound: true, badge: true, alert: true, provisional: false),

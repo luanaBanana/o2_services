@@ -27,6 +27,8 @@ dependencies:
   firebase_messaging:
   google_fonts: ^1.1.0
   flutter_local_notifications: ^1.4.4+4
+  string_validator: ^0.1.4
+
 
 
 
@@ -54,7 +56,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/go2sky.png"
+  image_path: "assets/images/go2sky_android.png"
 
   # To add assets to your application, add an assets section, like this:
   # assets:
