@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -144,7 +145,7 @@ class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
   final List<Widget> _pageOptions = [
     WebView(
-        initialUrl: url,
+       initialUrl: url,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (webViewController) {
           _webViewController = webViewController;
