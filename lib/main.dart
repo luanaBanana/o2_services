@@ -43,9 +43,10 @@ class _MyAppState extends State<MyApp> {
       url = message['url'];
     }
     else if (Platform.isAndroid){
-      var notification = message['notification'];
-      url = notification['body'];
+      var notification = message['data'];
+      url = notification['url'];
     }
+    print('LOG: Received URL is: $url');
     return url;
   }
 
@@ -56,9 +57,8 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        url = extractURL(message);
-        print('LOG: Received URL is: $url');
         setState(() {
+          url = extractURL(message);
           if (isSender != true) {
             showMyDialog();
           } else {
@@ -68,19 +68,16 @@ class _MyAppState extends State<MyApp> {
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        final notification = message['data'];
         setState(() {
-          print("onLaunch 2: $message");
-          url = notification['url'];
+          url = extractURL(message);
           showMyDialog();
         });
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        final notification = message['data'];
         setState(() {
-          url = notification['url'];
+          url = extractURL(message);
           showMyDialog();
         });
       },
