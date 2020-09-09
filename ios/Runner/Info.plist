@@ -27,7 +27,7 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
-                <true/>
+        <true/>
 	</dict>
 
 	<key>UIBackgroundModes</key>
