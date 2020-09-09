@@ -13,7 +13,7 @@ import 'model/message.dart';
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 WebViewController _webViewController;
-var url = "https://google.com/";
+var url = "https://o2.services";
 bool showLoading = false;
 bool isSender = false;
 
@@ -176,7 +176,8 @@ Future<void> showMyDialog() async {
           FlatButton(
             child: Text('Allow'),
             onPressed: () {
-              final BottomNavigationBar navigationBar = navBarGlobalKey.currentWidget;
+              final BottomNavigationBar navigationBar =
+                  navBarGlobalKey.currentWidget;
               navigationBar.onTap(0);
               _webViewController.loadUrl(url);
               Navigator.of(context).pop();
