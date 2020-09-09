@@ -38,6 +38,17 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  String extractURL(Map<String, dynamic> message){
+    if (Platform.isIOS){
+      url = message['url'];
+    }
+    else if (Platform.isAndroid){
+      var notification = message['notification'];
+      url = notification['body'];
+    }
+    return url;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,10 +56,9 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        final notification = message['notification'];
+        url = extractURL(message);
+        print('LOG: Received URL is: $url');
         setState(() {
-          url = notification['body'];
-          print('LOG: url on message: $url');
           if (isSender != true) {
             showMyDialog();
           } else {
