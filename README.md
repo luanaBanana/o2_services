@@ -1,16 +1,30 @@
 # o2_services
 
-We are building a mobile application with Flutter.
+A mobile application container for o2.services.
 
-## Getting Started
+## Setup iOS
 
-This project is a starting point for a Flutter application.
+To run it on iOS you need to install this on a Mac:
 
-A few resources to get you started if this is your first Flutter project:
+* Flutter & Flutter SDK
+* Xcode
+* iOS simulator or device
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Follow [these](https://flutter.dev/docs/get-started/install/macos) instructions.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Setup Android
+
+To run it on Android you need to install:
+
+* Flutter & proper SDK
+* Android Studio
+* Simulator or device
+
+Follow [these](https://flutter.dev/docs/get-started/install/windows) instcutions.
+
+### Firebase Cloud Messaging
+
+The integration is done through a [flutter plugin](https://pub.dev/packages/firebase_messaging).
+
+Follow [these](https://pub.dev/packages/firebase_messaging) instructions depending on which platform you use.
