@@ -12,6 +12,7 @@ class FirebaseMessagingWidget extends StatefulWidget {
   FirebaseMessagingWidgetState createState() =>
       FirebaseMessagingWidgetState(messages);
 }
+//This just shows the current url.
 
 class FirebaseMessagingWidgetState extends State<FirebaseMessagingWidget> {
   final List<MyMessage> messages;

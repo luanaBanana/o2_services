@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:o2_services/main.dart';
 
-
+//This is the server token taken from the firebase project.
 final String serverToken =
     'AAAAEike9qQ:APA91bG9AvlSWWaMIZy-jybRs--uMgc7Ybjz7_wavGloY3ArfrZ1eDMcj-FDt2hRUrInmIo4_872rqjHouOi7vr-IgYSqxqZH04uXJqdWJBehY_O_SwKBUiI078xkYFN2aFraaYEu3o4';
 
@@ -18,8 +18,8 @@ class SendNotificationView extends StatelessWidget {
   TextEditingController _teController = new TextEditingController();
   String finalUrl;
 
-  //TODO: add message body as class.
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
+    //change isSender to true
     isSender = true;
     print('LOG: You are about to send a message');
     await _firebaseMessaging.requestNotificationPermissions(
@@ -27,6 +27,7 @@ class SendNotificationView extends StatelessWidget {
           sound: true, badge: true, alert: true, provisional: false),
     );
 
+    //Make API call
     await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -42,11 +43,13 @@ class SendNotificationView extends StatelessWidget {
           },
           'priority': 'high',
           'data': <String, dynamic>{
+            //This is important for Android, it shows what needs to be done when the push notification is clicked.
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'id': '1',
             'status': 'done',
             'url': finalUrl
           },
+          //This is important becuase all the devices are subscribed to this subject.
           "to": "/topics/all",
         },
       ),

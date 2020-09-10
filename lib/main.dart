@@ -1,23 +1,29 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:o2_services/firebase_messaging.dart';
 import 'package:o2_services/sendNotificationView.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
 import 'firebase_messaging.dart';
 import 'model/message.dart';
 
+//Initialize Firebase
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+//Global Key for the state of the pages within bar navigation
 GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
+
+//Webview
 WebViewController _webViewController;
+//Webview Url
 var url = "https://o2.services";
-bool showLoading = false;
+
+//Is user currently a sender?
 bool isSender = false;
 
 void main() => runApp((MyApp()));
+
 
 class MyApp extends StatefulWidget {
   static final navKey = new GlobalKey<NavigatorState>();
@@ -31,13 +37,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<MyMessage> messages = [];
 
-  void changeURL(String url) {
-    print('new URL: ' + url);
-    setState(() {
-      _webViewController.loadUrl(url);
-    });
-  }
-
+  //Extract URL from received payload. Different depending if iOS or Android.
   String extractURL(Map<String, dynamic> message){
     if (Platform.isIOS){
       url = message['url'];
@@ -50,15 +50,22 @@ class _MyAppState extends State<MyApp> {
     return url;
   }
 
+  //This initializes the main app. In here we define what happens when a notification
+  // is received in the different states: onLaunch, onResume, onMessage.
   @override
   void initState() {
     super.initState();
+    //Subscribe to the topic "all". This is important, because it is needed when we send a notification.
+    // The notification is sent to all the devices subscribed to "all"
     _firebaseMessaging.subscribeToTopic("all");
+    //Firebase is configured
     _firebaseMessaging.configure(
+      //On message = app is open
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         setState(() {
           url = extractURL(message);
+          //if it is the sender no alert needs to pop up
           if (isSender != true) {
             showMyDialog();
           } else {
@@ -66,6 +73,7 @@ class _MyAppState extends State<MyApp> {
           }
         });
       },
+      // On Launch = open the app from a terminated state.
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         setState(() {
@@ -73,7 +81,9 @@ class _MyAppState extends State<MyApp> {
           showMyDialog();
         });
       },
+      //onBackgroundMessage: Not used yet. Can be implemented if needed.
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+      // onResume: open app from background.
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         setState(() {
@@ -83,6 +93,7 @@ class _MyAppState extends State<MyApp> {
       },
     );
 
+    //Request the notification for iOS -> only needed for iOS.
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
@@ -102,6 +113,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
+            //Add children widget if needed
             Expanded(
               child: FirebaseMessagingWidget(messages),
             ),
@@ -120,6 +132,7 @@ class _MyAppState extends State<MyApp> {
             currentIndex: _currentIndex,
             onTap: onTabTapped,
             items: [
+              //Add items if needed
               BottomNavigationBarItem(
                   icon: Icon(Icons.home), title: Text('WebView')),
               BottomNavigationBarItem(
@@ -130,7 +143,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   // BottomNavigationBar
-  int _currentIndex = 0;
+  int _currentIndex = 0; // current index 0 is the 1 page of the bottomNavigation bar. and so on.
+  // list of pages, items can be added if needed (make sure to also add a BottomNavigationBarItem)
   final List<Widget> _pageOptions = [
     WebView(
       initialUrl: url,
@@ -142,6 +156,8 @@ class _MyAppState extends State<MyApp> {
     SendNotificationView(_firebaseMessaging),
   ];
 
+  //This is what happens when you click on one of the bottom navigation bar items
+  // -> index is changed meaning another page will be opened and the webview will reload.
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -150,18 +166,9 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+//This is currently not needed, but can be implemented if needed.
 Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-  if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-    print('We here 1');
-  }
-
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-    print('We here 2');
-  } // Or do other work.
+  //DO WORK
 }
 
 Future<void> showMyDialog() async {
@@ -187,6 +194,7 @@ Future<void> showMyDialog() async {
                   navBarGlobalKey.currentWidget;
               navigationBar.onTap(0);
               _webViewController.loadUrl(url);
+              //this makes the aler go away
               Navigator.of(context).pop();
               //onTabTapped(Icons.home);
             },
@@ -194,6 +202,7 @@ Future<void> showMyDialog() async {
           FlatButton(
             child: Text('Deny'),
             onPressed: () {
+              //this makes the aler go away
               Navigator.of(context).pop();
             },
           ),
